@@ -39,3 +39,79 @@ class CustomUser(AbstractUser):
 
     def __str__(self):
         return self.username
+
+
+class Schema(models.Model):
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
+
+    schema_name = models.CharField(
+        null=False,
+        blank=False,
+        max_length=255,
+    )
+
+    date_edit = models.DateTimeField(
+        auto_now_add=True,
+    )
+
+    def __str__(self):
+        return f"{self.schema_name}"
+
+
+class Column(models.Model):
+    type_choices = (
+        ('email', 'EMAIL'),
+        ('full name', 'FULL_NAME'),
+        # ('job', 'JOB'),
+        # ('domain name', 'DOMAIN_NAME'),
+        ('phone number', 'PHONE_NUMBER'),
+        ('text', 'TEXT'),
+        # ('integer', 'INTEGER'),
+        # ('address', 'ADDRESS'),
+        ('date', 'DATE'),
+    )
+
+    schema = models.ForeignKey(Schema, on_delete=models.CASCADE)
+
+    name = models.CharField(
+        null=False,
+        blank=False,
+        max_length=255,
+    )
+
+    column_type = models.CharField(
+        null=False,
+        blank=False,
+        choices=type_choices,
+        max_length=255
+    )
+
+    column_order = models.IntegerField(
+        default=0,
+    )
+
+    column_from = models.IntegerField(
+        null=True,
+        blank=True
+    )
+
+    column_to = models.IntegerField(
+        null=True,
+        blank=True
+    )
+
+    def __str__(self):
+        return f"{self.schema} :  {self.name}"
+
+
+class DataSet(models.Model):
+    schema = models.ForeignKey(Schema, on_delete=models.CASCADE)
+
+    date_create = models.DateField(
+        auto_now=True,
+    )
+
+    file_path = models.CharField(max_length=2500, blank=True, null=True)
+
+    def __str__(self):
+        return f"{self.schema}"
