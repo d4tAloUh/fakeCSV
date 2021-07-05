@@ -1,0 +1,13 @@
+{% extends 'generic.html' %}
+
+{% block content %}
+    <div class="col-4 offset-4 card" style="padding: 60px 30px">
+        <h2 class="text-center mb-5">Login</h2>
+        <form method="post">
+            {% csrf_token %}
+            <input class="form-control mb-3" type="text" placeholder="Username" name="username">
+            <input class="form-control mb-3" type="password" placeholder="Password" name="password">
+            <input class="btn btn-primary" type="submit" value="Login" style="float:right">
+        </form>
+    </div>
+{% endblock %}
