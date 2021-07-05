@@ -3,6 +3,7 @@
 {% block content %}
     <div class="col-4 offset-4 card" style="padding: 60px 30px">
         <h2 class="text-center mb-5">Schemas</h2>
+        <a href="{% url 'create-schema' %}" class="btn btn-success">New Schema</a>
         <table class="table">
             <thead class="thead-dark">
             <tr>
@@ -13,13 +14,13 @@
             </tr>
             </thead>
             <tbody>
-            {% for schema in object_list %}
+            {% for schema in user_schemas %}
                 <div></div>
                 <tr>
                     <th scope="row">{{ forloop.counter }}</th>
                     <td>{{ schema.schema_name }}</td>
                     <td>{{ schema.date_edit }}</td>
-                    <td>Update Delete</td>
+                    <td><a href="#" class="btn btn-primary">Update</a>  <a href="#" class="btn btn-danger">Delete</a></td>
                 </tr>
             {% endfor %}
             </tbody>
