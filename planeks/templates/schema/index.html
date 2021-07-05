@@ -1,0 +1,28 @@
+{% extends 'generic.html' %}
+
+{% block content %}
+    <div class="col-4 offset-4 card" style="padding: 60px 30px">
+        <h2 class="text-center mb-5">Schemas</h2>
+        <table class="table">
+            <thead class="thead-dark">
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">Title</th>
+                <th scope="col">Modified</th>
+                <th scope="col">Actions</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for schema in object_list %}
+                <div></div>
+                <tr>
+                    <th scope="row">{{ forloop.counter }}</th>
+                    <td>{{ schema.schema_name }}</td>
+                    <td>{{ schema.date_edit }}</td>
+                    <td>Update Delete</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% endblock %}

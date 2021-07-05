@@ -1,5 +1,6 @@
 from django.urls import path
+from .views import SchemaListView
 
 urlpatterns = [
-    # path('', ,name=[])
+    path('', SchemaListView.as_view(), name='user-schemas')
 ]
