@@ -20,7 +20,12 @@
                     <th scope="row">{{ forloop.counter }}</th>
                     <td>{{ schema.schema_name }}</td>
                     <td>{{ schema.date_edit }}</td>
-                    <td><a href="#" class="btn btn-primary">Update</a>  <a href="#" class="btn btn-danger">Delete</a></td>
+                    <td><a href="{% url 'update-schema' schema.id %}" class="btn btn-primary">Update</a>
+                        <form method="post" action="{% url 'delete-schema' schema.id %}">
+                            {% csrf_token %}
+                            <button class="btn btn-danger" type="submit">Delete</button>
+                        </form>
+                    </td>
                 </tr>
             {% endfor %}
             </tbody>

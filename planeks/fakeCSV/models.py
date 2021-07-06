@@ -1,7 +1,6 @@
 from django.contrib.auth.base_user import BaseUserManager
 from django.contrib.auth.models import AbstractUser
 from django.db import models
-from django.utils import timezone
 from django.utils.translation import ugettext_lazy as _
 
 
@@ -42,12 +41,37 @@ class CustomUser(AbstractUser):
 
 
 class Schema(models.Model):
+    COLUMN_SEPARATOR_CHOICE = [
+        (',', 'comma'),
+        (";", 'semicolon'),
+        (':', 'colon'),
+    ]
+
+    STRING_CHARACTER_CHOICE = [
+        ('"', 'double_quote'),
+        ("'", 'apostrophe'),
+    ]
+
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
 
     schema_name = models.CharField(
         null=False,
         blank=False,
         max_length=255,
+    )
+
+    column_separator = models.CharField(
+        null=False,
+        blank=False,
+        max_length=2,
+        choices=COLUMN_SEPARATOR_CHOICE
+    )
+
+    string_character = models.CharField(
+        null=False,
+        blank=False,
+        max_length=2,
+        choices=STRING_CHARACTER_CHOICE
     )
 
     date_edit = models.DateTimeField(
