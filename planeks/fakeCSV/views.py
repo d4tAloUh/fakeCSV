@@ -42,6 +42,7 @@ class SchemaUpdateView(LoginRequiredRedirectMixin, TemplateView):
         context = super(SchemaUpdateView, self).get_context_data(**kwargs)
         context['schema'] = Schema.objects.prefetch_related('column_set').get(user=self.request.user,
                                                                               id=self.kwargs['pk'])
+        context['type_choices'] = Column.TYPE_CHOICES
         return context
 
     def get_success_url(self):

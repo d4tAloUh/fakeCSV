@@ -84,15 +84,15 @@ class Schema(models.Model):
 
 class Column(models.Model):
     TYPE_CHOICES = (
-        ('email', 'EMAIL'),
-        ('full name', 'FULL_NAME'),
+        ('EMAIL', 'email'),
+        ('FULL_NAME', 'full name'),
         # ('job', 'JOB'),
         # ('domain name', 'DOMAIN_NAME'),
-        ('phone number', 'PHONE_NUMBER'),
-        ('text', 'TEXT'),
-        ('integer', 'INTEGER'),
+        ('PHONE_NUMBER', 'phone number'),
+        ('TEXT', 'text'),
+        ('INTEGER', 'integer'),
         # ('address', 'ADDRESS'),
-        ('date', 'DATE'),
+        ('DATE', 'date'),
     )
 
     schema = models.ForeignKey(Schema, on_delete=models.CASCADE)

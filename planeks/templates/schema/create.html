@@ -30,14 +30,15 @@
                 {% endfor %}
             </select>
 
-            <h3>Columns</h3>
+            <h3 id="columns">Columns</h3>
 
             {% for column in schema.column_set.all %}
                 <div class="schema_column">
                     <label for="id_name">Name:</label>
                     <input type="text" name="column_name.{{ column.id }}" value="{{ column.column_name }}"
-                           maxlength="255" required=""
+                           maxlength="255" required
                            id="id_name">
+
                     <label for="id_column_type">Column type:</label>
                     <select name="column_type.{{ column.id }}" required id="id_column_type">
                         {% for type_string, value in column.TYPE_CHOICES %}
@@ -55,33 +56,53 @@
                     {% if column.column_type == 'text' %}
                         <label for="id_column_to">Amount of sentences:</label>
                         <input type="number" name="column_to.{{ column.id }}" id="id_column_to"
-                               value="{{ column.column_to }}">
+                               value="{{ column.column_to }}" class="non_required">
                     {% endif %}
 
                     {% if column.column_type == 'integer' %}
                         <label for="id_column_from">Column from:</label>
                         <input type="number" name="column_from.{{ column.id }}" id="id_column_from"
-                               value="{{ column.column_from }}">
+                               value="{{ column.column_from }}" class="non_required">
 
                         <label for="id_column_to">Column to:</label>
                         <input type="number" name="column_to.{{ column.id }}" id="id_column_to"
-                               value="{{ column.column_to }}">
+                               value="{{ column.column_to }}" class="non_required">
                     {% endif %}
 
 
-                    <button class="btn btn-danger deleteColumn">delete</button>
+                    <button class="btn btn-danger deleteColumn">Delete</button>
                 </div>
             {% endfor %}
-            <button class="btn btn-info">Append</button>
+
             <button type="submit" class="btn btn-primary">{% block button_title %}Create{% endblock %}</button>
         </form>
+        <div class="new-append-column">
+            <label for="id_name_new">Name:</label>
+            <input type="text" maxlength="255" required id="id_name_new" class="additional" name="column_name">
+
+            <label for="id_column_type_new">Column type:</label>
+            <select required id="id_column_type_new" class="additional" name="column_type">
+                {% for type_string, value in type_choices %}
+                    <option value="{{ type_string }}">
+                        {{ value }}
+                    </option>
+                {% endfor %}
+            </select>
+
+            <label for="id_column_order">Column order:</label>
+            <input type="number" name="column_order"  required
+                   id="id_column_order" class="additional">
+
+            <button class="btn btn-info" id="append-button">Append</button>
+            <button class="btn btn-danger" id="clear-button">Delete</button>
+        </div>
     </div>
 {% endblock %}
 
 {% block script %}
     {% load static %}
     <script src="{% static 'js/schema_helpers.js' %}" type="text/javascript"></script>
-{#    <script type="text/javascript">#}
-{##}
-{#    </script>#}
+    {#    <script type="text/javascript">#}
+    {##}
+    {#    </script>#}
 {% endblock %}
