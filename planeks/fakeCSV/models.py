@@ -75,7 +75,7 @@ class Schema(models.Model):
     )
 
     date_edit = models.DateTimeField(
-        auto_now_add=True,
+        auto_now=True,
     )
 
     def __str__(self):
@@ -83,21 +83,21 @@ class Schema(models.Model):
 
 
 class Column(models.Model):
-    type_choices = (
+    TYPE_CHOICES = (
         ('email', 'EMAIL'),
         ('full name', 'FULL_NAME'),
         # ('job', 'JOB'),
         # ('domain name', 'DOMAIN_NAME'),
         ('phone number', 'PHONE_NUMBER'),
         ('text', 'TEXT'),
-        # ('integer', 'INTEGER'),
+        ('integer', 'INTEGER'),
         # ('address', 'ADDRESS'),
         ('date', 'DATE'),
     )
 
     schema = models.ForeignKey(Schema, on_delete=models.CASCADE)
 
-    name = models.CharField(
+    column_name = models.CharField(
         null=False,
         blank=False,
         max_length=255,
@@ -106,7 +106,7 @@ class Column(models.Model):
     column_type = models.CharField(
         null=False,
         blank=False,
-        choices=type_choices,
+        choices=TYPE_CHOICES,
         max_length=255
     )
 
@@ -125,7 +125,13 @@ class Column(models.Model):
     )
 
     def __str__(self):
-        return f"{self.schema} :  {self.name}"
+        return f"{self.schema} :  {self.column_name}"
+
+    def save(self, **kwargs):
+        if self.column_type.lower() not in ['text', 'integer'] and (
+                self.column_to is not None or self.column_from is not None):
+            raise ValueError(f'Cannot set column from or column to for {self.column_type} type')
+        return super(Column, self).save(**kwargs)
 
 
 class DataSet(models.Model):
