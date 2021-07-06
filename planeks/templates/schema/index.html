@@ -18,7 +18,7 @@
                 <div></div>
                 <tr>
                     <th scope="row">{{ forloop.counter }}</th>
-                    <td>{{ schema.schema_name }}</td>
+                    <td><a href="{% url 'schema-datasets' schema.id %}">{{ schema.schema_name }}</a></td>
                     <td>{{ schema.date_edit }}</td>
                     <td><a href="{% url 'update-schema' schema.id %}" class="btn btn-primary">Update</a>
                         <form method="post" action="{% url 'delete-schema' schema.id %}">

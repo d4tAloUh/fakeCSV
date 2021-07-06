@@ -30,9 +30,10 @@
                 {% endfor %}
             </select>
 
-            <h3 id="columns">Columns</h3>
-
+            <h3>Columns</h3>
+            <div id="columns">
             {% for column in schema.column_set.all %}
+
                 <div class="schema_column">
                     <label for="id_name">Name:</label>
                     <input type="text" name="column_name.{{ column.id }}" value="{{ column.column_name }}"
@@ -73,7 +74,7 @@
                     <button class="btn btn-danger deleteColumn">Delete</button>
                 </div>
             {% endfor %}
-
+            </div>
             <button type="submit" class="btn btn-primary">{% block button_title %}Create{% endblock %}</button>
         </form>
         <div class="new-append-column">

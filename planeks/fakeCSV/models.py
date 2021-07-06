@@ -137,7 +137,7 @@ class Column(models.Model):
 class DataSet(models.Model):
     schema = models.ForeignKey(Schema, on_delete=models.CASCADE)
 
-    date_create = models.DateField(
+    date_created = models.DateField(
         auto_now=True,
     )
 

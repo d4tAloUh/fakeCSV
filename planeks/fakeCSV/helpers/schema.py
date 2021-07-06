@@ -39,9 +39,10 @@ def update_or_create_schema_columns(request, schema):
             for value in columns[column_pk]:
                 setattr(column, value, columns[column_pk][value])
             column.save(update_fields=columns[column_pk].keys())
-        except Column.DoesNotExist:
-            Schema.objects.create(
+        except (Column.DoesNotExist, ValueError, TypeError):
+            Column.objects.create(
                 **columns[column_pk],
                 schema=schema
             )
-        Column.objects.filter(schema=schema).exclude(id__in=columns.keys()).delete()
+
+        Column.objects.filter(schema=schema).exclude(id__in=[key for key in columns.keys() if key.isnumeric()]).delete()

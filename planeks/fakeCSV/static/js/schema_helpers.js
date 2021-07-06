@@ -30,7 +30,8 @@ window.onload = () => {
 
         type_select.val(column.find('[name^=column_type]').val()).change()
 
-        $('#columns').next().append(newColumn)
+        let referenceNode = $('#columns')
+        referenceNode.after(newColumn)
 
         counter += 1
         clearNonRequired(event)

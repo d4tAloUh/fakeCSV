@@ -1,0 +1,38 @@
+{% extends 'generic.html' %}
+
+{% block content %}
+    <div class="col-4 offset-4 card" style="padding: 60px 30px">
+        <h2 class="text-center mb-5">Datasets</h2>
+        <form method="post">
+            {% csrf_token %}
+            <label for="rows_amount">Rows:</label>
+            <input type="number" name="rows_amount" id="rows_amount">
+            <button type="submit" class="btn btn-success">Generate data</button>
+        </form>
+        <table class="table">
+            <thead class="thead-dark">
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">Created</th>
+                <th scope="col">Status</th>
+                <th scope="col">Actions</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for dataset in user_datasets %}
+                <div></div>
+                <tr>
+                    <th scope="row">{{ forloop.counter }}</th>
+                    <td>{{ dataset.date_created }}</td>
+                    <td>{% if dataset.file_path %}Ready{% else %}Processing{% endif %}</td>
+                    <td>
+                        {% if dataset.file_path %}
+                            <a href="{% url 'update-schema' schema.id %}" class="btn btn-primary">Download</a>
+                        {% endif %}
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% endblock %}
