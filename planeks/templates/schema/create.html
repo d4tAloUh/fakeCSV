@@ -1,5 +1,5 @@
 {% extends 'generic_with_jquery.html' %}
-{% load static %}
+
 {% block content %}
     <div class="container">
         <h2>{% block form_title %}New Schema{% endblock %}</h2>
@@ -79,6 +79,7 @@
 {% endblock %}
 
 {% block script %}
+    {% load static %}
     <script src="{% static 'js/schema_helpers.js' %}" type="text/javascript"></script>
 {#    <script type="text/javascript">#}
 {##}

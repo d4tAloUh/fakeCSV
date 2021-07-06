@@ -34,14 +34,14 @@ def update_or_create_schema_columns(request, schema):
                 }
     # Update or create
     for column_pk in columns:
-
         try:
             column = Column.objects.get(id=column_pk)
             for value in columns[column_pk]:
                 setattr(column, value, columns[column_pk][value])
             column.save(update_fields=columns[column_pk].keys())
-        except Schema.DoesNotExist:
+        except Column.DoesNotExist:
             Schema.objects.create(
                 **columns[column_pk],
                 schema=schema
             )
+        Column.objects.filter(schema=schema).exclude(id__in=columns.keys()).delete()

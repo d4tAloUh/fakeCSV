@@ -1,5 +1,4 @@
-$(document).ready(() => {
-    console.log("loaded script")
+window.onload = () => {
     const removeColumn = (event) => {
         event.preventDefault()
         let column = $(event.target).parent('.schema_column')
@@ -10,4 +9,5 @@ $(document).ready(() => {
     for (const button of buttons) {
         button.addEventListener('click', removeColumn, true)
     }
-})
+}
+
