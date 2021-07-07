@@ -48,7 +48,7 @@ def task_generate_data(self, schema_id, row_nums):
 
     schema_headers = list(schema_columns.values_list('column_name', flat=True))
 
-    with open(file_name, 'w', newline='') as file:
+    with open(file_name, 'w', newline='', encoding='utf-8') as file:
         csv_writer = csv.writer(file, delimiter=schema.column_separator, quotechar=schema.string_character)
         csv_writer.writerow(schema_headers)
 
