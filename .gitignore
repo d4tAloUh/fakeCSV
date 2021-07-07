@@ -3,5 +3,5 @@ myvenv/
 **/__pycache__
 **/db.sqlite3
 .idea
-**/migrations/0**
+#**/migrations/0**
 planeks/static

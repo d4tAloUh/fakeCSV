@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 """
 import os
 from pathlib import Path
+import django_heroku
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -24,7 +25,7 @@ SECRET_KEY = 'django-insecure-z+fu^l9801@efldo%bt+8lsbrnr#o7mjfe=&w35i!=5fhia+-e
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['fake-csv-d4t-alouh.herokuapp.com','127.0.0.1', 'localhost']
+ALLOWED_HOSTS = ['fake-csv-d4t-alouh.herokuapp.com', '127.0.0.1', 'localhost']
 
 # Application definition
 
@@ -137,3 +138,5 @@ CELERY_BROKER_URL = os.environ.get('CELERY_BROKER_URL', 'redis://localhost:6379'
 CELERY_RESULT_BACKEND = CELERY_BROKER_URL
 CELERY_ACCEPT_CONTENT = ['json']
 CELERY_TASK_SERIALIZER = 'json'
+
+django_heroku.settings(locals())
