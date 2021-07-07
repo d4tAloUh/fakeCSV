@@ -11,7 +11,7 @@ from django.views.generic import ListView, CreateView, UpdateView
 from .forms import SchemaForm, ColumnForm
 from .models import Schema, Column, DataSet
 from .helpers import update_or_create_schema, update_or_create_schema_columns, task_generate_data
-
+from django.conf import settings
 
 class LoginRequiredRedirectMixin(LoginRequiredMixin):
     login_url = '/login/'
@@ -98,6 +98,6 @@ class DataSetDownloadView(LoginRequiredRedirectMixin, View):
         # with open(file_path, 'rb') as fh:
             # response = HttpResponse(fh.read(), content_type="application/vnd.ms-excel")
             # response['Content-Disposition'] = 'inline; filename=' + os.path.basename(file_path)
-        response = FileResponse(open(file_path, 'rb'))
+        response = FileResponse(open(f"{settings.MEDIA_ROOT}/{file_path}", 'rb'))
         return response
 

@@ -49,4 +49,5 @@ def update_or_create_schema_columns(request, schema):
                 schema=schema
             )
             column_ids.append(column.id)
+
     Column.objects.filter(schema=schema).exclude(id__in=column_ids).delete()
