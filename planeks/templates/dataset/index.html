@@ -28,7 +28,7 @@
                     <td>{% if dataset.file_path %}Ready{% else %}Processing{% endif %}</td>
                     <td>
                         {% if dataset.file_path %}
-                            <a href="{% url 'update-schema' schema.id %}" class="btn btn-primary">Download</a>
+                            <a href="{% url 'dataset-download' dataset.id %}" download class="btn btn-primary">Download</a>
                         {% endif %}
                     </td>
                 </tr>

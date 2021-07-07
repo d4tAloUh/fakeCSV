@@ -1,8 +1,11 @@
+import os
+
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db import transaction
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseRedirect, FileResponse
 from django.shortcuts import render
 from django.urls import reverse
+from django.views import View
 from django.views.generic import TemplateView, DeleteView
 from django.views.generic import ListView, CreateView, UpdateView
 from .forms import SchemaForm, ColumnForm
@@ -82,6 +85,19 @@ class DataSetListView(LoginRequiredRedirectMixin, ListView):
         return DataSet.objects.filter(schema_id=self.kwargs['pk'])
 
     def post(self, request, *args, **kwargs):
-        print(request.POST)
         task = task_generate_data.delay(self.kwargs['pk'], request.POST['rows_amount'])
         return render(request, self.template_name, {"task_id": task.id})
+
+
+class DataSetDownloadView(LoginRequiredRedirectMixin, View):
+    context_object_name = 'user_datasets'
+    template_name = 'dataset/index.html'
+
+    def get(self, request, *args, **kwargs):
+        file_path = DataSet.objects.get(id=self.kwargs['pk']).file_path
+        # with open(file_path, 'rb') as fh:
+            # response = HttpResponse(fh.read(), content_type="application/vnd.ms-excel")
+            # response['Content-Disposition'] = 'inline; filename=' + os.path.basename(file_path)
+        response = FileResponse(open(file_path, 'rb'))
+        return response
+

@@ -1,13 +1,16 @@
 import csv
 import random
 
-from planeks.celery import app
+# from planeks.celery import app
+from celery import shared_task
 from fakeCSV.models import Schema, DataSet, Column
 from django.conf import settings
-import uuid
 import faker
+import logging
 
 fake = faker.Faker()
+
+logger = logging.getLogger(__name__)
 
 
 def generate_random_data_for_column(column):
@@ -34,19 +37,26 @@ def generate_row(columns):
     return row
 
 
-@app.task
-def task_generate_data(schema_id, row_nums):
+@shared_task(bind=True)
+def task_generate_data(self, schema_id, row_nums):
     schema = Schema.objects.get(id=schema_id)
     schema_columns = Column.objects.filter(schema_id=schema_id).order_by('column_order')
     dataset = DataSet.objects.create(schema=schema)
 
-    file_name = f"{settings.MEDIA_ROOT}Schema_{schema.schema_name}_{schema_id}.csv"
+    file_name = f"{settings.MEDIA_ROOT}/Schema_{schema.schema_name}_{dataset.id}.csv"
+    # logger.info(f"Created dataset with id = {dataset.id} and file_name = {file_name}")
+
+    schema_headers = list(schema_columns.values_list('column_name', flat=True))
 
     with open(file_name, 'w', newline='') as file:
-        csv_writer = csv.writer(file, delimeter=schema.column_separator, quotechar=schema.string_character)
-        for _ in range(row_nums):
+        csv_writer = csv.writer(file, delimiter=schema.column_separator, quotechar=schema.string_character)
+        csv_writer.writerow(schema_headers)
+
+        for i in range(int(row_nums)):
             row = generate_row(schema_columns)
             csv_writer.writerow(row)
 
     dataset.file_path = file_name
-    dataset.save(update_fields='file_path')
+    dataset.save(update_fields=['file_path'])
+
+    return dataset
