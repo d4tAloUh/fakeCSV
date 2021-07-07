@@ -3,10 +3,11 @@
 {% block content %}
     <div class="col-4 offset-4 card" style="padding: 60px 30px">
         <h2 class="text-center mb-5">Datasets</h2>
+    {{ task_id }}
         <form method="post">
             {% csrf_token %}
             <label for="rows_amount">Rows:</label>
-            <input type="number" name="rows_amount" id="rows_amount">
+            <input type="number" name="rows_amount" id="rows_amount" value="200" min="1" max="1000">
             <button type="submit" class="btn btn-success">Generate data</button>
         </form>
         <table class="table">

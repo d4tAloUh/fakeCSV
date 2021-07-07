@@ -1,30 +1,52 @@
-from planeks.celery import app
+import csv
+import random
 
-from fakeCSV.models import Schema, DataSet
+from planeks.celery import app
+from fakeCSV.models import Schema, DataSet, Column
+from django.conf import settings
+import uuid
+import faker
+
+fake = faker.Faker()
+
+
+def generate_random_data_for_column(column):
+    if column.column_type == 'EMAIL':
+        return fake.ascii_email()
+    elif column.column_type == 'FULL_NAME':
+        return fake.name_nonbinary()
+    elif column.column_type == 'PHONE_NUMBER':
+        return fake.phone_number()
+    elif column.column_type == 'TEXT':
+        return fake.paragraph(nb_sentences=column.column_to)
+    elif column.column_type == 'INTEGER':
+        return random.randrange(column.column_from, column.column_to, 1)
+    elif column.column_type == 'DATE':
+        return fake.date()
+    else:
+        raise ValueError('Bad column type')
+
+
+def generate_row(columns):
+    row = []
+    for column in columns:
+        row.append(generate_random_data_for_column(column))
+    return row
 
 
 @app.task
-def generate_data_task(schema_id, user_id, nums_row):
-    exist_schema, _schema = __get_schema_from_db(pk=schema_id, user__pk=user_id)
-    if not exist_schema:
-        return _schema
-    if not nums_row:
-        logging.error("There is no number of lines in the parameters.")
-        return {'status': 'error', 'message': 'There is no number of lines in the parameters.'}
-    fields = __fill_fields(columns=_schema.schema_columns.all())
-    url = 'https://www.mockaroo.com/api/generate.csv'
-    payload = {'key': '2ef5da30', 'count': nums_row, }
-    response = requests.post(url=url, params=payload, json=fields)
-    if response.ok:
-        content_b64 = __convertBytesToB64(content_bytes=response.content,
-                                          delimiter=_schema.get_column_separator_char(),
-                                          quote_char=_schema.get_string_character_char())
-        dataset = DataSet.objects.create(schema=_schema, file_content=content_b64)
-        if dataset:
-            return {'status': 'ok', 'message': f'{dataset.pk}'}
-        else:
-            logging.error(f"Received incorrect CSV format")
-            return {'status': 'error', 'message': 'Received incorrect CSV format.'}
-    else:
-        logging.error(f"Error while receiving data from the mockaroo")
-        return {'status': 'error', 'message': 'Error while receiving data from the mockaroo.'}
+def task_generate_data(schema_id, row_nums):
+    schema = Schema.objects.get(id=schema_id)
+    schema_columns = Column.objects.filter(schema_id=schema_id).order_by('column_order')
+    dataset = DataSet.objects.create(schema=schema)
+
+    file_name = f"{settings.MEDIA_ROOT}Schema_{schema.schema_name}_{schema_id}.csv"
+
+    with open(file_name, 'w', newline='') as file:
+        csv_writer = csv.writer(file, delimeter=schema.column_separator, quotechar=schema.string_character)
+        for _ in range(row_nums):
+            row = generate_row(schema_columns)
+            csv_writer.writerow(row)
+
+    dataset.file_path = file_name
+    dataset.save(update_fields='file_path')

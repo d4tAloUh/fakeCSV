@@ -7,7 +7,7 @@ from django.views.generic import TemplateView, DeleteView
 from django.views.generic import ListView, CreateView, UpdateView
 from .forms import SchemaForm, ColumnForm
 from .models import Schema, Column, DataSet
-from .helpers import update_or_create_schema, update_or_create_schema_columns
+from .helpers import update_or_create_schema, update_or_create_schema_columns, task_generate_data
 
 
 class LoginRequiredRedirectMixin(LoginRequiredMixin):
@@ -79,11 +79,9 @@ class DataSetListView(LoginRequiredRedirectMixin, ListView):
     template_name = 'dataset/index.html'
 
     def get_queryset(self):
-        queryset = DataSet.objects.filter(schema_id=self.kwargs['pk'])
-        print(queryset)
-        return queryset
+        return DataSet.objects.filter(schema_id=self.kwargs['pk'])
 
     def post(self, request, *args, **kwargs):
-        print(request)
-        context = self.get_context_data()
-        return self.render_to_response(context)
+        print(request.POST)
+        task = task_generate_data.delay(self.kwargs['pk'], request.POST['rows_amount'])
+        return render(request, self.template_name, {"task_id": task.id})

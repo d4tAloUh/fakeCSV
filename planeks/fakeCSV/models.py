@@ -116,7 +116,8 @@ class Column(models.Model):
 
     column_from = models.IntegerField(
         null=True,
-        blank=True
+        blank=True,
+        default=0
     )
 
     column_to = models.IntegerField(
@@ -131,6 +132,10 @@ class Column(models.Model):
         if self.column_type.lower() not in ['text', 'integer'] and (
                 self.column_to is not None or self.column_from is not None):
             raise ValueError(f'Cannot set column from or column to for {self.column_type} type')
+
+        if self.column_type.lower() in ['text','integer'] and self.column_to is None or self.column_to == '':
+            self.column_to = 1
+
         return super(Column, self).save(**kwargs)
 
 
