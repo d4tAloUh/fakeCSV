@@ -59,4 +59,4 @@ def task_generate_data(self, schema_id, row_nums):
     dataset.file_path = file_name
     dataset.save(update_fields=['file_path'])
 
-    return dataset
+    return dataset.id

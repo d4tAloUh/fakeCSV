@@ -5,3 +5,5 @@ myvenv/
 .idea
 #**/migrations/0**
 planeks/static
+
+**/media/Schema*.csv
