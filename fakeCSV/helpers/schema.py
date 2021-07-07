@@ -20,6 +20,7 @@ def update_or_create_schema(request, pk):
 
 def update_or_create_schema_columns(request, schema):
     columns = {}
+    column_ids = []
     # Group data into dict by pk
     for key, value in request.POST.items():
         key_pk = key.split('.')
@@ -32,6 +33,9 @@ def update_or_create_schema_columns(request, schema):
                 columns[key_pk[1]] = {
                     key_pk[0]: value
                 }
+                if key_pk[1].isnumeric():
+                    column_ids.append(key_pk[1])
+
     # Update or create
     for column_pk in columns:
         try:
@@ -40,9 +44,9 @@ def update_or_create_schema_columns(request, schema):
                 setattr(column, value, columns[column_pk][value])
             column.save(update_fields=columns[column_pk].keys())
         except (Column.DoesNotExist, ValueError, TypeError):
-            Column.objects.create(
+            column = Column.objects.create(
                 **columns[column_pk],
                 schema=schema
             )
-
-        Column.objects.filter(schema=schema).exclude(id__in=[key for key in columns.keys() if key.isnumeric()]).delete()
+            column_ids.append(column.id)
+    Column.objects.filter(schema=schema).exclude(id__in=column_ids).delete()
