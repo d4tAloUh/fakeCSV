@@ -3,14 +3,14 @@ window.onload = () => {
 
     const removeColumn = (event) => {
         event.preventDefault()
-        let column = $(event.target).parent('.schema_column')
+        let column = $(event.target).parent().parent('.schema_column')
         column.remove()
     }
 
     const addNewColumn = (event) => {
         event.preventDefault()
 
-        let column = $($(event.target).parent()[0])
+        let column = $($(event.target).parent().find('.new-append-column')[0])
 
         let newColumn = column.clone()
         newColumn.removeClass('new-append-column').addClass('schema_column')
@@ -21,7 +21,10 @@ window.onload = () => {
 
         newColumn.find('.btn').remove()
 
-        let button = $('<button class="btn btn-danger deleteColumn">Delete</button>')[0]
+        let button = $(`<div class="col flex-row-reverse">
+                            <button class="btn btn-danger deleteColumn">Delete</button>
+                        </div>`)[0]
+
         newColumn.append(button)
         newColumn.find('.btn')[0].addEventListener('click', removeColumn, true)
 
@@ -34,28 +37,37 @@ window.onload = () => {
         referenceNode.after(newColumn)
 
         counter += 1
-        clearNonRequired(event)
         clearColumn(event)
     }
 
     const clearNonRequired = (event) => {
-        let event_target = $(event.target.parentElement)
-        event_target.find('.non_required').remove()
-        return event_target
+        let event_target = $(event.target)
+        if (event_target.hasClass('form-select')) {
+            event_target = event_target[0].parentElement.parentElement
+        } else {
+            event_target = event_target[0].parentElement
+        }
+        console.log(event.target)
+        console.log(event_target)
+        let non_required_inputs = $(event_target).find('.non_required')
+        for (let non_required of non_required_inputs) {
+            non_required.remove()
+        }
+        return event.target.parentElement
     }
 
     const handleType = (event) => {
         let event_target = clearNonRequired(event)
-
+        console.log(event_target)
         if (event.target.value === 'INTEGER') {
-            event_target.append($(`<div class="non_required"><label for="id_column_from">Column from:</label>
-                <input type="number" id="id_column_from" name="column_from"></div>`))
-            event_target.append($(`<div class="non_required"><label for="id_column_to">Column to:</label>
-                <input type="number" id="id_column_to" name="column_to"></div>`))
+            event_target.after($(`<div class="non_required col"><label for="id_column_from" class="col-form-label">Column from:</label>
+                <input type="number" id="id_column_from" name="column_from" class="form-control"></div>`)[0])
+            event_target.after($(`<div class="non_required col"><label for="id_column_to" class="col-form-label">Column to:</label>
+                <input type="number" id="id_column_to" name="column_to" class="form-control"></div>`)[0])
         } else if (event.target.value === 'TEXT') {
-            event_target.append($(
-                `<div class="non_required"><label for="id_column_to">Amount of sentences:</label>
-                <input type="number" id="id_column_to" name="column_to"></div>`)
+            event_target.after($(
+                `<div class="non_required col"><label for="id_column_to" class="col-form-label">Amount of sentences:</label>
+                <input type="number" id="id_column_to" name="column_to" class="form-control"></div>`)[0]
             )
         }
     }
@@ -63,8 +75,12 @@ window.onload = () => {
     const clearColumn = (event) => {
         event.preventDefault()
         let newColumn = $(event.target).parent()
+        if ($(event.target).id === 'clear-button') {
+            newColumn = newColumn.parent()
+        }
         newColumn.find('[name^=column]').val('')
         newColumn.find('#id_column_type_new').val('EMAIL').change()
+        clearNonRequired(event)
     }
 
     const buttons = $('.deleteColumn')

@@ -1,101 +1,134 @@
 {% extends 'generic_with_jquery.html' %}
 
 {% block content %}
-    <div class="container">
-        <h2>{% block form_title %}New Schema{% endblock %}</h2>
+    <div class="container mt-5">
+        <h2 class="pb-3">{% block form_title %}New Schema{% endblock %}</h2>
         <form method="post">
             {% csrf_token %}
-            <label for="id_schema_name">Schema name:</label>
-            <input type="text" name="schema_name" value="{{ schema.schema_name }}"
-                   maxlength="255" required id="id_schema_name">
-
-            <label for="id_column_separator">Column separator:</label>
-            <select name="column_separator" required id="id_column_separator">
-                {% for column_char, value in schema.COLUMN_SEPARATOR_CHOICE %}
-                    <option value="{{ column_char }}"
-                            {% if column_char == schema.column_separator %}selected {% endif %}>
-                        {{ value }} ({{ column_char }})
-                    </option>
-                {% endfor %}
-
-            </select>
-            <label for="id_string_character">String character:</label>
-            <select name="string_character" required
-                    id="id_string_character">
-                {% for string_char, value in schema.STRING_CHARACTER_CHOICE %}
-                    <option value="{{ string_char }}"
-                            {% if string_char == schema.string_character %}selected {% endif %}>
-                        {{ value }} ({{ string_char }})
-                    </option>
-                {% endfor %}
-            </select>
-
-            <h3>Columns</h3>
+        <button type="submit" class="btn btn-primary float-end">{% block button_title %}Create{% endblock %}</button>
+            <div class="col-6">
+                <div class="form-group row pb-3">
+                    <label for="id_schema_name" class="col-form-label col-sm-3">Schema name</label>
+                    <div class="col-sm-9">
+                        <input type="text" name="schema_name" value="{{ schema.schema_name }}"
+                               maxlength="255" required id="id_schema_name" class="form-control">
+                    </div>
+                </div>
+                <div class="form-group row pb-3">
+                    <label for="id_column_separator" class="col-form-label col-sm-3">Column separator:</label>
+                    <div class="col-sm-9">
+                        <select name="column_separator" required id="id_column_separator" class="form-select">
+                            {% for column_char, value in schema.COLUMN_SEPARATOR_CHOICE %}
+                                <option value="{{ column_char }}"
+                                        {% if column_char == schema.column_separator %}selected {% endif %}>
+                                    {{ value }} ({{ column_char }})
+                                </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group row pb-3">
+                    <label for="id_string_character" class="col-form-label col-sm-3">String character:</label>
+                    <div class="col-sm-9">
+                        <select name="string_character" required
+                                id="id_string_character" class="form-select">
+                            {% for string_char, value in schema.STRING_CHARACTER_CHOICE %}
+                                <option value="{{ string_char }}"
+                                        {% if string_char == schema.string_character %}selected {% endif %}>
+                                    {{ value }} ({{ string_char }})
+                                </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <h3 class="pb-3">Schema Columns</h3>
             <div id="columns">
-            {% for column in schema.column_set.all %}
+                {% for column in schema.column_set.all %}
+                    <div class="schema_column row">
+                        <div class="col-3">
+                            <label for="id_name" class="col-form-label">Name:</label>
+                            <input type="text" name="column_name.{{ column.id }}" value="{{ column.column_name }}"
+                                   maxlength="255" required
+                                   id="id_name" class="form-control">
+                        </div>
+                        <div class="col-2">
+                            <label for="id_column_type" class="col-form-label">Column type:</label>
+                            <select name="column_type.{{ column.id }}" required id="id_column_type" class="form-select">
+                                {% for type_string, value in column.TYPE_CHOICES %}
+                                    <option value="{{ type_string }}"
+                                            {% if type_string == column.column_type %}selected {% endif %}>
+                                        {{ value }}
+                                    </option>
+                                {% endfor %}
+                            </select>
+                        </div>
 
-                <div class="schema_column">
-                    <label for="id_name">Name:</label>
-                    <input type="text" name="column_name.{{ column.id }}" value="{{ column.column_name }}"
-                           maxlength="255" required
-                           id="id_name">
+                        {% if column.column_type == 'TEXT' %}
+                            <div class="col">
+                                <label for="id_column_to" class="col-form-label">Amount of sentences:</label>
+                                <input type="number" name="column_to.{{ column.id }}" id="id_column_to"
+                                       value="{{ column.column_to }}" class="non_required form-control">
+                            </div>
+                        {% endif %}
 
-                    <label for="id_column_type">Column type:</label>
-                    <select name="column_type.{{ column.id }}" required id="id_column_type">
-                        {% for type_string, value in column.TYPE_CHOICES %}
-                            <option value="{{ type_string }}"
-                                    {% if type_string == column.column_type %}selected {% endif %}>
+
+                        {% if column.column_type == 'INTEGER' %}
+                            <div class="col non_required">
+                                <label for="id_column_from" class="col-form-label">Column from:</label>
+                                <input type="number" name="column_from.{{ column.id }}" id="id_column_from"
+                                       value="{{ column.column_from }}" class="form-control">
+                            </div>
+                            <div class="col non_required">
+                                <label for="id_column_to" class="col-form-label">Column to:</label>
+                                <input type="number" name="column_to.{{ column.id }}" id="id_column_to"
+                                       value="{{ column.column_to }}" class="form-control">
+                            </div>
+                        {% endif %}
+                        <div class="col-2">
+                            <label for="id_column_order" class="col-form-label">Column order:</label>
+                            <input type="number" name="column_order.{{ column.id }}" value="{{ column.column_order }}"
+                                   required
+                                   id="id_column_order" class="form-control">
+                        </div>
+                        <div class="col flex-row-reverse">
+                            <button class="btn btn-danger deleteColumn">Delete</button>
+                        </div>
+
+                    </div>
+                {% endfor %}
+            </div>
+
+        </form>
+        <div class="card padded-card-small mt-4">
+        <h4>New column</h4>
+            <div class="new-append-column row">
+                <div class="col-3">
+                    <label for="id_name" class="col-form-label">Name:</label>
+                    <input type="text" maxlength="255" required id="id_name_new" class="additional form-control"
+                           name="form-control additional">
+                </div>
+                <div class="col-2">
+                    <label for="id_column_type_new" class="col-form-label">Column type:</label>
+                    <select required id="id_column_type_new" class="additional form-select" name="column_type">
+                        {% for type_string, value in type_choices %}
+                            <option value="{{ type_string }}">
                                 {{ value }}
                             </option>
                         {% endfor %}
-
                     </select>
-                    <label for="id_column_order">Column order:</label>
-                    <input type="number" name="column_order.{{ column.id }}" value="{{ column.column_order }}" required
-                           id="id_column_order">
-
-                    {% if column.column_type == 'TEXT' %}
-                        <label for="id_column_to">Amount of sentences:</label>
-                        <input type="number" name="column_to.{{ column.id }}" id="id_column_to"
-                               value="{{ column.column_to }}" class="non_required">
-                    {% endif %}
-
-                    {% if column.column_type == 'INTEGER' %}
-                        <label for="id_column_from">Column from:</label>
-                        <input type="number" name="column_from.{{ column.id }}" id="id_column_from"
-                               value="{{ column.column_from }}" class="non_required">
-
-                        <label for="id_column_to">Column to:</label>
-                        <input type="number" name="column_to.{{ column.id }}" id="id_column_to"
-                               value="{{ column.column_to }}" class="non_required">
-                    {% endif %}
-
-
-                    <button class="btn btn-danger deleteColumn">Delete</button>
                 </div>
-            {% endfor %}
+                <div class="col-2">
+                    <label for="id_column_order" class="col-form-label">Column order:</label>
+                    <input type="number" name="column_order" required
+                           id="id_column_order" class="additional form-control">
+                </div>
+                <div class="col flex-row-reverse">
+                    <button class="btn btn-danger mr-4" id="clear-button">Clear</button>
+
+                </div>
             </div>
-            <button type="submit" class="btn btn-primary">{% block button_title %}Create{% endblock %}</button>
-        </form>
-        <div class="new-append-column">
-            <label for="id_name_new">Name:</label>
-            <input type="text" maxlength="255" required id="id_name_new" class="additional" name="column_name">
-
-            <label for="id_column_type_new">Column type:</label>
-            <select required id="id_column_type_new" class="additional" name="column_type">
-                {% for type_string, value in type_choices %}
-                    <option value="{{ type_string }}">
-                        {{ value }}
-                    </option>
-                {% endfor %}
-            </select>
-
-            <label for="id_column_order">Column order:</label>
-            <input type="number" name="column_order"  required
-                   id="id_column_order" class="additional">
-
-            <button class="btn btn-info" id="append-button">Append</button>
-            <button class="btn btn-danger" id="clear-button">Delete</button>
+        <button class="btn btn-info col-1 mt-4" id="append-button">Append</button>
         </div>
     </div>
 {% endblock %}
