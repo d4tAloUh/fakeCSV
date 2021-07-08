@@ -54,13 +54,13 @@
                     <input type="number" name="column_order.{{ column.id }}" value="{{ column.column_order }}" required
                            id="id_column_order">
 
-                    {% if column.column_type == 'text' %}
+                    {% if column.column_type == 'TEXT' %}
                         <label for="id_column_to">Amount of sentences:</label>
                         <input type="number" name="column_to.{{ column.id }}" id="id_column_to"
                                value="{{ column.column_to }}" class="non_required">
                     {% endif %}
 
-                    {% if column.column_type == 'integer' %}
+                    {% if column.column_type == 'INTEGER' %}
                         <label for="id_column_from">Column from:</label>
                         <input type="number" name="column_from.{{ column.id }}" id="id_column_from"
                                value="{{ column.column_from }}" class="non_required">
