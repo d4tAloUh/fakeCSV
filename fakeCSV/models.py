@@ -84,6 +84,7 @@ class Schema(models.Model):
         return f"{self.schema_name}"
 
 
+
 class Column(models.Model):
     TYPE_CHOICES = (
         ('EMAIL', 'email'),
@@ -130,6 +131,8 @@ class Column(models.Model):
     def __str__(self):
         return f"{self.schema} :  {self.column_name}"
 
+    class Meta:
+        ordering = ['column_order']
 
 class DataSet(models.Model):
     id = models.UUIDField(primary_key=True)
