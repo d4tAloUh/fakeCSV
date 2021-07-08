@@ -21,7 +21,7 @@
             </thead>
             <tbody>
             {% for dataset in user_datasets %}
-                <tr>
+                <tr id="{{ dataset.id }}" {% if not dataset.file_path %} class="not_ready_dataset" {% endif %}>
                     <th scope="row">{{ forloop.counter }}</th>
                     <td>{{ dataset.date_created }}</td>
                     <td>
