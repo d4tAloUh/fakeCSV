@@ -12,9 +12,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-z+fu^l9801@efldo%bt+8lsbrnr#o7mjfe=&w35i!=5fhia+-e'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-# DEBUG = os.get True
-DEBUG = os.environ.get('DEBUG', True)
-print(DEBUG)
+
+DEBUG = False
+# DEBUG = os.environ.get('DEBUG', True)
 ALLOWED_HOSTS = ['fake-csv-d4t-alouh.herokuapp.com', '127.0.0.1', 'localhost']
 
 # Application definition
