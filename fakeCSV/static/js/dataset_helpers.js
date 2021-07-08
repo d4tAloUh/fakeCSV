@@ -10,17 +10,15 @@ window.onload = () => {
     const appendNewRow = (response) => {
         const table_body = $('tbody');
 		const last_row = table_body.children().last();
-		const trc = $($('script[data-template="appendTableRow"]').html().trim()).clone();
 		const nums_row = last_row.find('th').html()
-        console.log(nums_row)
 
-		trc.attr('task_id', task_id);
-		trc.children('#index').text((nums_row ? +nums_row : 0) + 1);
-		trc.find('#date_created').text((new Date()).toISOString().split('T') [0]);
-		trc.find('#status').text('Processing');
-
-		tb.append(trc);
-        console.log(response)
+		table_body.append($(`<tr id="${response.data.task_id}">
+                    <th scope="row">${nums_row}</th>
+                    <td>${new Date().toLocaleDateString("en-US",{ year: 'numeric', month: 'long', day: 'numeric' })}</td>
+                    <td>
+                        <span class="badge btn-secondary">Processing</span>
+                    </td>
+                </tr>`));
     }
 
     const generateData = (e) => {

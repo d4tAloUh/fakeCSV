@@ -92,9 +92,9 @@ class DataSetListView(LoginRequiredRedirectMixin, ListView):
     def post(self, request, *args, **kwargs):
         request_body = json.loads(request.body.decode('utf-8'))
         rows_amount = request_body.get('rows_amount', 200)
-        task = task_generate_data.apply_async((self.kwargs['pk'], rows_amount),
-                                              task_id=uuid())
-        return JsonResponse({'task_id': task.id}, status=200)
+        # task = task_generate_data.apply_async((self.kwargs['pk'], rows_amount),
+        #                                       task_id=uuid())
+        return JsonResponse({'task_id': uuid()}, status=200)
 
 
 class DataSetResultView(LoginRequiredRedirectMixin, View):
