@@ -1,0 +1,36 @@
+.padded-card-large {
+    padding: 60px 30px
+}
+
+.padded-card-small {
+    padding: 30px 15px
+}
+
+.delete-button {
+    width: 100%;
+}
+
+.deleteColumn {
+    align-self: flex-end;
+}
+
+/*#append-button {*/
+/*    align-self: flex-end;*/
+/*    margin-right: 20px;*/
+/*}*/
+
+#id_column_order{
+    margin-left: -13px;
+}
+
+#clear-button {
+    align-self: flex-end;
+}
+
+.schema_column {
+    margin-bottom: 30px;
+}
+
+.flex-row-reverse {
+    display: flex;
+}
