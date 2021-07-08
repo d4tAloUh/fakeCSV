@@ -3,7 +3,8 @@ window.onload = () => {
 
     const removeColumn = (event) => {
         event.preventDefault()
-        let column = $(event.target).parent().parent('.schema_column')
+
+        let column = $(event.target).parent().parent().parent('.schema_column')
         column.remove()
     }
 
@@ -23,12 +24,12 @@ window.onload = () => {
         let clearButtonParent = clearButton.parent()
         clearButton.remove()
 
-        let button = $(`<div class="flex-row-reverse">
-                            <button class="btn btn-danger deleteColumn">Delete</button>
-                        </div>`)[0]
+        let button = $(`<button class="btn btn-danger deleteColumn">Delete</button>`)[0]
 
         clearButtonParent.append(button)
-        newColumn.find('.btn')[0].addEventListener('click', removeColumn, true)
+        let buttonoNew = newColumn.find('.btn')[0]
+        console.log(buttonoNew)
+        buttonoNew.addEventListener('click', removeColumn, true)
 
         let type_select = newColumn.find('[name^=column_type]')
         type_select[0].addEventListener('change', handleType, true)
@@ -60,12 +61,11 @@ window.onload = () => {
 
     const handleType = (event) => {
         let event_target = clearNonRequired(event)
-        console.log(event_target)
         if (event.target.value === 'INTEGER') {
-            event_target.after($(`<div class="non_required col"><label for="id_column_from" class="col-form-label">Column from:</label>
-                <input type="number" id="id_column_from" name="column_from" class="form-control"></div>`)[0])
             event_target.after($(`<div class="non_required col"><label for="id_column_to" class="col-form-label">Column to:</label>
                 <input type="number" id="id_column_to" name="column_to" class="form-control"></div>`)[0])
+            event_target.after($(`<div class="non_required col"><label for="id_column_from" class="col-form-label">Column from:</label>
+                <input type="number" id="id_column_from" name="column_from" class="form-control"></div>`)[0])
         } else if (event.target.value === 'TEXT') {
             event_target.after($(
                 `<div class="non_required col"><label for="id_column_to" class="col-form-label">Amount of sentences:</label>
