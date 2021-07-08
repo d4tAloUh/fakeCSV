@@ -38,6 +38,9 @@
 .inline-button {
     border: none;
     background-color: inherit;
+    color: #0d6efd;
+    padding: 0;
+    text-decoration: underline;
 }
 
 .black-link {

@@ -57,7 +57,7 @@ window.onload = () => {
             let row = $(`#${dataset_id}`)
             row.removeClass("not_ready_dataset")
             row.append($(`<td>
-                        <button class="link" id="${dataset_id}">Download</button>
+                        <button class="link inline-button" id="${dataset_id}">Download</button>
                     </td>`)[0])
             row.find('.link')[0].addEventListener('click', downloadDataset, true)
             let badge = row.find('.badge')
