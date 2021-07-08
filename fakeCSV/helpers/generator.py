@@ -3,6 +3,7 @@ import random
 import faker
 import logging
 import firebase_admin
+import os
 
 from firebase_admin import storage, credentials
 from celery import shared_task
@@ -25,7 +26,6 @@ credential = credentials.Certificate({
     "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
     "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/firebase-adminsdk-9fo2f%40planeks-test-4227a.iam.gserviceaccount.com"
 })
-
 
 firebaseConfig = {
     "apiKey": "AIzaSyA_u7KEgttBtt6VsvpTn4ZjYNSM2-rtg8A",
@@ -72,15 +72,15 @@ def generate_row(columns):
 def task_generate_data(self, schema_id, row_nums):
     schema = Schema.objects.get(id=schema_id)
     schema_columns = Column.objects.filter(schema_id=schema_id).order_by('column_order')
-    dataset = DataSet.objects.create(schema=schema)
+    dataset = DataSet.objects.create(schema=schema, id=self.request.id)
 
     file_name = f"Schema_{schema.schema_name}_{dataset.id}.csv"
-    # logger.info(f"Created dataset with id = {dataset.id} and file_name = {file_name}")
     file_path = f"{settings.MEDIA_ROOT}/{file_name}"
     schema_headers = list(schema_columns.values_list('column_name', flat=True))
 
     with open(file_path, 'w', newline='', encoding='utf-8') as file:
-        csv_writer = csv.writer(file, delimiter=schema.column_separator, quotechar=schema.string_character)
+        csv_writer = csv.writer(file, delimiter=schema.column_separator,
+                                quotechar=schema.string_character)
         csv_writer.writerow(schema_headers)
 
         for i in range(int(row_nums)):
@@ -90,6 +90,10 @@ def task_generate_data(self, schema_id, row_nums):
     blob = bucket.blob(file_name)
     blob.upload_from_filename(file_path)
     blob.make_public()
+
+    if os.path.exists(file_path):
+        os.remove(file_path)
+
     dataset.file_path = blob.public_url
     dataset.save(update_fields=['file_path'])
 

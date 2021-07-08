@@ -1,4 +1,6 @@
+import json
 import os
+from celery import uuid
 
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db import transaction
@@ -12,6 +14,9 @@ from .forms import SchemaForm, ColumnForm
 from .models import Schema, Column, DataSet
 from .helpers import update_or_create_schema, update_or_create_schema_columns, task_generate_data
 from django.conf import settings
+from django.http import JsonResponse
+from celery.result import AsyncResult
+
 
 class LoginRequiredRedirectMixin(LoginRequiredMixin):
     login_url = '/login/'
@@ -85,7 +90,22 @@ class DataSetListView(LoginRequiredRedirectMixin, ListView):
         return DataSet.objects.filter(schema_id=self.kwargs['pk'])
 
     def post(self, request, *args, **kwargs):
-        task = task_generate_data.delay(self.kwargs['pk'], request.POST['rows_amount'])
-        return render(request, self.template_name, {"task_id": task.id})
+        request_body = json.loads(request.body.decode('utf-8'))
+        rows_amount = request_body.get('rows_amount', 200)
+        task = task_generate_data.apply_async((self.kwargs['pk'], rows_amount),
+                                              task_id=uuid())
+        return JsonResponse({'task_id': task.id}, status=200)
 
 
+class DataSetResultView(LoginRequiredRedirectMixin, View):
+
+    def post(self, request, *args, **kwargs):
+        request_body = json.loads(request.body.decode('utf-8'))
+        task_list = request_body['task_list']
+        result_datasets = []
+        for task_id in task_list:
+            task = AsyncResult(task_id)
+            if task.successful():
+                dataset_id = task.get()
+                result_datasets.append(dataset_id)
+        return JsonResponse({'result_datasets': result_datasets}, status=200)

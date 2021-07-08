@@ -1,14 +1,14 @@
-{% extends 'generic.html' %}
+{% extends 'generic_with_jquery.html' %}
 
 {% block content %}
     <div class="col-4 offset-4 card" style="padding: 60px 30px">
         <h2 class="text-center mb-5">Datasets</h2>
-    {{ task_id }}
-        <form method="post">
+        {{ task_id }}
+        <form method="post" id="generateDataForm">
             {% csrf_token %}
             <label for="rows_amount">Rows:</label>
             <input type="number" name="rows_amount" id="rows_amount" value="200" min="1" max="1000">
-            <button type="submit" class="btn btn-success">Generate data</button>
+            <button type="submit" class="btn btn-success" id="generateData">Generate data</button>
         </form>
         <table class="table">
             <thead class="thead-dark">
@@ -21,15 +21,19 @@
             </thead>
             <tbody>
             {% for dataset in user_datasets %}
-                <div></div>
                 <tr>
                     <th scope="row">{{ forloop.counter }}</th>
                     <td>{{ dataset.date_created }}</td>
-                    <td>{% if dataset.file_path %}Ready{% else %}Processing{% endif %}</td>
                     <td>
                         {% if dataset.file_path %}
-                            <a href="{{ dataset.file_path }}" download class="btn btn-primary">Download</a>
-{#                            <a href="{% url 'dataset-download' dataset.id %}" download class="btn btn-primary">Download</a>#}
+                            <span class="badge btn-success">Ready</span>
+                        {% else %}
+                            <span class="badge btn-secondary">Processing</span>
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if dataset.file_path %}
+                            <a href="{{ dataset.file_path }}" download>Download</a>
                         {% endif %}
                     </td>
                 </tr>
@@ -37,4 +41,12 @@
             </tbody>
         </table>
     </div>
+{% endblock %}
+
+{% block script %}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.21.1/axios.min.js"
+            integrity="sha512-bZS47S7sPOxkjU/4Bt0zrhEtWx0y0CRkhEp8IckzK+ltifIIE9EMIMTuT/mEzoIMewUINruDBIR/jJnbguonqQ=="
+            crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    {% load static %}
+    <script src="{% static 'js/dataset_helpers.js' %}" type="text/javascript"></script>
 {% endblock %}

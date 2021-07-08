@@ -1,3 +1,5 @@
+import uuid
+
 from django.contrib.auth.base_user import BaseUserManager
 from django.contrib.auth.models import AbstractUser
 from django.db import models
@@ -130,6 +132,7 @@ class Column(models.Model):
 
 
 class DataSet(models.Model):
+    id = models.UUIDField(primary_key=True)
     schema = models.ForeignKey(Schema, on_delete=models.CASCADE)
 
     date_created = models.DateField(
@@ -139,4 +142,4 @@ class DataSet(models.Model):
     file_path = models.CharField(max_length=2500, blank=True, null=True)
 
     def __str__(self):
-        return f"{self.schema}"
+        return f"{self.id} / {self.schema}"
