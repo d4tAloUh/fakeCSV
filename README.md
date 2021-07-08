@@ -1,6 +1,6 @@
 # FakeCSV is an online service for generating CSV files with fake(dummy) data using Python and Django:
 
-#### Deployed to [heroku](fake-csv-d4t-alouh.herokuapp.com/)
+#### Deployed to [heroku](https://fake-csv-d4t-alouh.herokuapp.com/)
 
 ### Service has following features:
 * Schema creation and updating (Name, Columns etc.)
