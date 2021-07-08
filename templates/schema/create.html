@@ -5,7 +5,8 @@
         <h2 class="pb-3">{% block form_title %}New Schema{% endblock %}</h2>
         <form method="post">
             {% csrf_token %}
-        <button type="submit" class="btn btn-primary float-end">{% block button_title %}Create{% endblock %}</button>
+            <button type="submit" class="btn btn-primary float-end">{% block button_title %}
+                Create{% endblock %}</button>
             <div class="col-6">
                 <div class="form-group row pb-3">
                     <label for="id_schema_name" class="col-form-label col-sm-3">Schema name</label>
@@ -85,26 +86,28 @@
                                        value="{{ column.column_to }}" class="form-control">
                             </div>
                         {% endif %}
-                        <div class="col-2">
-                            <label for="id_column_order" class="col-form-label">Column order:</label>
-                            <input type="number" name="column_order.{{ column.id }}" value="{{ column.column_order }}"
-                                   required
-                                   id="id_column_order" class="form-control">
-                        </div>
                         <div class="col flex-row-reverse">
-                            <button class="btn btn-danger deleteColumn">Delete</button>
+                            <div class="flex-row-reverse">
+                                <button class="btn btn-danger deleteColumn">Delete</button>
+                            </div>
+                            <div>
+                                <label for="id_column_order" class="col-form-label">Column order:</label>
+                                <input type="number" name="column_order.{{ column.id }}"
+                                       value="{{ column.column_order }}"
+                                       required
+                                       id="id_column_order" class="form-control">
+                            </div>
                         </div>
-
                     </div>
                 {% endfor %}
             </div>
 
         </form>
         <div class="card padded-card-small mt-4">
-        <h4>New column</h4>
+            <h4>New column</h4>
             <div class="new-append-column row">
                 <div class="col-3">
-                    <label for="id_name" class="col-form-label">Name:</label>
+                    <label for="id_name_new" class="col-form-label">Name:</label>
                     <input type="text" maxlength="255" required id="id_name_new" class="additional form-control"
                            name="form-control additional">
                 </div>
@@ -118,17 +121,18 @@
                         {% endfor %}
                     </select>
                 </div>
-                <div class="col-2">
-                    <label for="id_column_order" class="col-form-label">Column order:</label>
-                    <input type="number" name="column_order" required
-                           id="id_column_order" class="additional form-control">
-                </div>
                 <div class="col flex-row-reverse">
-                    <button class="btn btn-danger mr-4" id="clear-button">Clear</button>
-
+                    <div class="flex-row-reverse">
+                        <button class="btn btn-danger" id="clear-button">Clear</button>
+                    </div>
+                    <div>
+                        <label for="id_column_order" class="col-form-label">Column order:</label>
+                        <input type="number" name="column_order" required
+                               id="id_column_order" class="additional form-control">
+                    </div>
                 </div>
             </div>
-        <button class="btn btn-info col-1 mt-4" id="append-button">Append</button>
+            <button class="btn btn-info col-1 mt-4" id="append-button">Append</button>
         </div>
     </div>
 {% endblock %}

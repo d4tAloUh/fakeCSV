@@ -19,13 +19,15 @@ window.onload = () => {
             $(this).attr('name', $(this).attr('name') + '.new' + counter);
         });
 
-        newColumn.find('.btn').remove()
+        let clearButton = newColumn.find('.btn')
+        let clearButtonParent = clearButton.parent()
+        clearButton.remove()
 
-        let button = $(`<div class="col flex-row-reverse">
+        let button = $(`<div class="flex-row-reverse">
                             <button class="btn btn-danger deleteColumn">Delete</button>
                         </div>`)[0]
 
-        newColumn.append(button)
+        clearButtonParent.append(button)
         newColumn.find('.btn')[0].addEventListener('click', removeColumn, true)
 
         let type_select = newColumn.find('[name^=column_type]')
@@ -42,13 +44,13 @@ window.onload = () => {
 
     const clearNonRequired = (event) => {
         let event_target = $(event.target)
+
         if (event_target.hasClass('form-select')) {
             event_target = event_target[0].parentElement.parentElement
         } else {
             event_target = event_target[0].parentElement
         }
-        console.log(event.target)
-        console.log(event_target)
+
         let non_required_inputs = $(event_target).find('.non_required')
         for (let non_required of non_required_inputs) {
             non_required.remove()
