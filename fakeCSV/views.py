@@ -106,6 +106,7 @@ class DataSetDownloadView(LoginRequiredRedirectMixin, View):
 
 class DataSetResultView(LoginRequiredRedirectMixin, View):
 
+
     def post(self, request, *args, **kwargs):
         request_body = json.loads(request.body.decode('utf-8'))
         task_list = request_body['task_list']
