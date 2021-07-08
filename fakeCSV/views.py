@@ -99,5 +99,5 @@ class DataSetDownloadView(LoginRequiredRedirectMixin, View):
             # response = HttpResponse(fh.read(), content_type="application/vnd.ms-excel")
             # response['Content-Disposition'] = 'inline; filename=' + os.path.basename(file_path)
         response = FileResponse(open(f"{settings.MEDIA_ROOT}/{file_path}", 'rb'))
-        return file_path
+        return response
 
