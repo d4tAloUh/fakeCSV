@@ -1,13 +1,13 @@
 {% extends 'generic_with_jquery.html' %}
 
 {% block content %}
-    <div class="col-4 offset-4 card" style="padding: 60px 30px">
+    <div class="col-6 offset-3 card mt-5" style="padding: 60px 30px">
         <h2 class="text-center mb-5">Datasets</h2>
         {{ task_id }}
-        <form method="post" id="generateDataForm">
+        <form method="post" id="generateDataForm" class="d-flex justify-content-end align-items-center">
             {% csrf_token %}
-            <label for="rows_amount">Rows:</label>
-            <input type="number" name="rows_amount" id="rows_amount" value="200" min="1" max="1000">
+            <label for="rows_amount" class="me-1"><b>Rows:</b></label>
+            <input type="number" name="rows_amount" id="rows_amount" value="200" min="1" max="1000" class="me-1" style="height: 38px">
             <button type="submit" class="btn btn-success" id="generateData">Generate data</button>
         </form>
         <table class="table">

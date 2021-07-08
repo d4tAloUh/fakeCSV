@@ -19,7 +19,7 @@
 /*    margin-right: 20px;*/
 /*}*/
 
-#id_column_order{
+#id_column_order {
     margin-left: -13px;
 }
 
@@ -33,4 +33,22 @@
 
 .flex-row-reverse {
     display: flex;
+}
+
+.inline-button {
+    border: none;
+    background-color: inherit;
+}
+
+.black-link {
+    color: black;
+    text-decoration: none;
+}
+
+.black-link:hover {
+    color: green;
+}
+
+.grey-color {
+    color: grey;
 }

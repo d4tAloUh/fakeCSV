@@ -1,19 +1,18 @@
 <nav class="navbar navbar-light bg-light ml-auto">
     <div class="align-center" style="padding: 0 20px">
-        <span class="navbar-brand brand">
-            <a href='/' class="navbar-brand">fakeCSV</a></span>
-        <div><a href="{% url 'user-schemas' %}">Schemas</a></div>
+        <span href='/' class="navbar-brand"><b>FakeCSV</b></span>
+        <a href="{% url 'user-schemas' %}" class="black-link">Schemas</a>
     </div>
     <div>
         {% if user.is_authenticated %}
-            <div class="nav-item">Hello, {{ user.get_username }}</div>
             <div class="nav-item">
                 <form method="post" action="{% url 'user-logout' %}">
+                    <span class="grey-color">Hello, <b>{{ user.get_username }}</b></span>
                     {% csrf_token %}
                     {% if redirect_field_value %}
                         <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}"/>
                     {% endif %}
-                    <button type="submit">Вийти з кабінету</button>
+                    <button type="submit" class="inline-button grey-color">Logout</button>
                 </form>
             </div>
         {% else %}
