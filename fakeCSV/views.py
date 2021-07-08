@@ -99,7 +99,7 @@ class DataSetListView(LoginRequiredRedirectMixin, ListView):
 
 class DataSetDownloadView(LoginRequiredRedirectMixin, View):
 
-    def post(self, request, *args, **kwargs):
+    def get(self, request, *args, **kwargs):
         dataset = DataSet.objects.get(id=self.kwargs["pk"])
         return JsonResponse({'dataset_url': dataset.file_path}, status=200)
 

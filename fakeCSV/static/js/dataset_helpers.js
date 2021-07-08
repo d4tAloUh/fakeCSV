@@ -8,7 +8,8 @@ window.onload = () => {
     const appendNewRow = (response) => {
         const table_body = $('tbody');
         const last_row = table_body.children().last();
-        const nums_row = last_row.find('th').html()
+        let nums_row = last_row.find('th').html()
+        nums_row = nums_row ? nums_row : 1
 
         table_body.append($(`<tr id="${response.data.task_id}" class="not_ready_dataset">
                     <th scope="row">${nums_row}</th>
@@ -22,7 +23,7 @@ window.onload = () => {
     const downloadDataset = (event) => {
         axios({
             method: 'get',
-            url: `${window.location.hostname}/dataset/${event.target.id}/download`,
+            url: `/dataset/${event.target.id}/download`,
         }).then(response => {
             let link = document.createElement('a');
             document.body.appendChild(link);
