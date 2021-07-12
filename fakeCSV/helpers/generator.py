@@ -71,9 +71,12 @@ def task_generate_data(self, schema_id, row_nums):
     schema_columns = Column.objects.filter(schema_id=schema_id).order_by('column_order')
     dataset = DataSet.objects.create(schema=schema, id=self.request.id)
 
-    file_name = f"Schema_{schema.schema_name}_{dataset.id}.csv"
+    file_name = f"Schema_{schema.schema_name}_{4242}.csv"
     file_path = f"{settings.MEDIA_ROOT}/{file_name}"
     schema_headers = list(schema_columns.values_list('column_name', flat=True))
+
+    if not os.path.exists(settings.MEDIA_ROOT):
+        os.makedirs(settings.MEDIA_ROOT)
 
     with open(file_path, 'w', newline='', encoding='utf-8') as file:
         csv_writer = csv.writer(file, delimiter=schema.column_separator,

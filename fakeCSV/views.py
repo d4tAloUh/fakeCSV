@@ -1,19 +1,16 @@
 import json
-import os
 from celery import uuid
 
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db import transaction
-from django.http import HttpResponse, HttpResponseRedirect, FileResponse
-from django.shortcuts import render
+from django.http import HttpResponseRedirect
 from django.urls import reverse
 from django.views import View
 from django.views.generic import TemplateView, DeleteView
-from django.views.generic import ListView, CreateView, UpdateView
-from .forms import SchemaForm, ColumnForm
+from django.views.generic import ListView
 from .models import Schema, Column, DataSet
 from .helpers import update_or_create_schema, update_or_create_schema_columns, task_generate_data
-from django.conf import settings
+
 from django.http import JsonResponse
 from celery.result import AsyncResult
 
@@ -94,6 +91,7 @@ class DataSetListView(LoginRequiredRedirectMixin, ListView):
         rows_amount = request_body.get('rows_amount', 200)
         task = task_generate_data.apply_async((self.kwargs['pk'], rows_amount),
                                               task_id=uuid())
+
         return JsonResponse({'task_id': task.id}, status=200)
 
 
