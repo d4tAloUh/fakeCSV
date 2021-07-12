@@ -130,6 +130,8 @@ LOGOUT_REDIRECT_URL = '/'
 CELERY_BROKER_URL = os.environ.get('REDISTOGO_URL', 'redis://localhost:6379')
 CELERY_RESULT_BACKEND = CELERY_BROKER_URL
 
+print("Private key is", os.environ.get("private_key"), )
+print("Private key id is", os.environ.get("private_key_id"), )
 
 credential = credentials.Certificate({
     "type": "service_account",
@@ -152,7 +154,4 @@ firebase_app = firebase_admin.initialize_app(credential, {
 
 bucket = storage.bucket(app=firebase_app)
 
-
 django_heroku.settings(locals())
-
-
