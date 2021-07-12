@@ -16,9 +16,8 @@ PRIVATE_KEY_ID = os.environ.get("private_key_id", "32a7264e24815e99a33e14c2743da
 CLIENT_EMAIL = os.environ.get('client_email',
                               "firebase-adminsdk-9fo2f@planeks-test-4227a.iam.gserviceaccount.com")
 CLIENT_ID = os.environ.get('client_id', "108400431971091242931")
+CLIENT_X509_CERT_URL = os.environ.get('client_x509_cert_url', "https://www.googleapis.com/robot/v1/metadata/x509/firebase-adminsdk-9fo2f%40planeks-test-4227a.iam.gserviceaccount.com")
 
-print("Private key is", PRIVATE_KEY, type(PRIVATE_KEY))
-print("Private key id is", PRIVATE_KEY_ID, type(PRIVATE_KEY_ID))
 
 credential = credentials.Certificate({
     "type": "service_account",
@@ -30,7 +29,7 @@ credential = credentials.Certificate({
     "auth_uri": "https://accounts.google.com/o/oauth2/auth",
     "token_uri": "https://oauth2.googleapis.com/token",
     "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
-    "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/firebase-adminsdk-9fo2f%40planeks-test-4227a.iam.gserviceaccount.com"
+    "client_x509_cert_url": CLIENT_X509_CERT_URL
 })
 
 firebase_app = firebase_admin.initialize_app(credential, {
